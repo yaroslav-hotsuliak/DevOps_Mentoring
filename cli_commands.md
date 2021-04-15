@@ -44,3 +44,7 @@ Create a target group:\
 `aws elbv2 create-target-group --name target-group-cli --protocol HTTP --port 80 --vpc-id vpc-3d43ed40`\
 "arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d"
 
+Create a listener for the load balancer:\
+`aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:345145124555:loadbalancer/app/load-balancer-cli-test/dcf437696dac6526 --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d`\
+"arn:aws:elasticloadbalancing:us-east-1:345145124555:listener/app/load-balancer-cli-test/dcf437696dac6526/3ad57d9479ee5742"
+
