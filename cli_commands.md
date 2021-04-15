@@ -28,3 +28,19 @@ Security group for RDS:\
 
 Setting up security policies for SGforRDScli:\
 `aws ec2 authorize-security-group-ingress --group-name SGforRDScli --protocol tcp --port 3306 --source-group SGforCLITest`
+
+**Create Auto Scaling group**
+
+Create a launch template:\
+`aws ec2 create-launch-template --generate-cli-skeleton input > launch-template.json`\
+`aws ec2 create-launch-template --cli-input-json file://launch-template.json`\
+"lt-01a70d76505c618b8"
+
+Create a load balancer:\
+`aws elbv2 create-load-balancer --name load-balancer-cli-test --subnets subnet-95b42cb4 subnet-2fc05e70 --security-groups sg-086846f0e9429ae63`\
+"arn:aws:elasticloadbalancing:us-east-1:345145124555:loadbalancer/app/load-balancer-cli-test/dcf437696dac6526"
+
+Create a target group:\
+`aws elbv2 create-target-group --name target-group-cli --protocol HTTP --port 80 --vpc-id vpc-3d43ed40`\
+"arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d"
+
