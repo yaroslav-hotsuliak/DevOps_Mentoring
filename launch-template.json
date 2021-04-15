@@ -6,7 +6,6 @@
         "EbsOptimized": true,
         "ImageId": "ami-0533f2ba8a1995cf9",
         "InstanceType": "t2.micro",
-        "KeyName": "",
         "Monitoring": {
             "Enabled": true
         },
@@ -14,16 +13,7 @@
         "InstanceInitiatedShutdownBehavior": "stop",
         "SecurityGroupIds": [
             "sg-086846f0e9429ae63"
-        ],
-        "SecurityGroups": [
-            "SGforCLITest"
-        ],
-        "HibernationOptions": {
-            "Configured": true
-        },
-        "EnclaveOptions": {
-            "Enabled": true
-        }
+        ]
     },
     "TagSpecifications": [
         {
