@@ -20,7 +20,7 @@ Security group for CLITest:\
 `aws ec2 create-security-group --group-name SGforCLITest --description "My security group for CLI Test"`
 
 Setting up security policies for SGforCLITest:\
-`aws ec2 authorize-security-group-ingress --group-name SGforCLITest --protocol tcp --port 80 --cidr 0.0.0.0/0`
+`aws ec2 authorize-security-group-ingress --group-name SGforCLITest --protocol tcp --port 80 --cidr 0.0.0.0/0`\
 `aws ec2 authorize-security-group-ingress --group-name SGforCLITest --protocol tcp --port 22 --cidr 94.131.204.14/32`
 
 Security group for RDS:\
