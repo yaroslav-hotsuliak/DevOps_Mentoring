@@ -32,9 +32,9 @@ Setting up security policies for SGforRDScli:\
 **Create Auto Scaling group**
 
 Create a launch template:\
-`aws ec2 create-launch-template --generate-cli-skeleton input > launch-template.json`\
-`aws ec2 create-launch-template --cli-input-json file://launch-template.json`\
-"lt-0c70edc6b89e1859b"
+`aws ec2 create-launch-template --launch-template-name launch-template-cli --version-description version1 ^
+  --launch-template-data "{\"ImageId\":\"ami-0533f2ba8a1995cf9\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-086846f0e9429ae63\"]}"`\
+"lt-08ea52d5fbe133e43"
 
 Create a load balancer:\
 `aws elbv2 create-load-balancer --name load-balancer-cli-test --subnets subnet-95b42cb4 subnet-2fc05e70 --security-groups sg-086846f0e9429ae63`\
@@ -49,4 +49,4 @@ Create a listener for the load balancer:\
 "arn:aws:elasticloadbalancing:us-east-1:345145124555:listener/app/load-balancer-cli-test/dcf437696dac6526/3ad57d9479ee5742"
 
 Create an auto scaling group:\
-`aws autoscaling create-auto-scaling-group --auto-scaling-group-name asg-cli --launch-template LaunchTemplateId=lt-0c70edc6b89e1859b --target-group-arns arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d --health-check-type ELB --health-check-grace-period 600 --min-size 1 --max-size 3 --desired-capacity 2 --vpc-zone-identifier "subnet-95b42cb4,subnet-2fc05e70"`
+`aws autoscaling create-auto-scaling-group --auto-scaling-group-name asg-cli --launch-template LaunchTemplateId=lt-08ea52d5fbe133e43 --target-group-arns arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d --health-check-type ELB --health-check-grace-period 600 --min-size 1 --max-size 3 --desired-capacity 2 --vpc-zone-identifier "subnet-95b42cb4,subnet-2fc05e70"`
