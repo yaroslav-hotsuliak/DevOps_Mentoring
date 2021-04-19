@@ -32,8 +32,8 @@ Setting up security policies for SGforRDScli:\
 **Create Auto Scaling group**
 
 Create a launch template:\
-`aws ec2 create-launch-template --launch-template-name launch-template-cli --version-description version1 ^ \
-  --launch-template-data "{\"ImageId\":\"ami-0533f2ba8a1995cf9\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-086846f0e9429ae63\"]}"`\
+`aws ec2 create-launch-template --launch-template-name launch-template-cli --version-description version1 ^`\
+  `--launch-template-data "{\"ImageId\":\"ami-0533f2ba8a1995cf9\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-086846f0e9429ae63\"]}"`\
 "lt-08ea52d5fbe133e43"
 
 Create a load balancer:\
@@ -52,6 +52,6 @@ Create an auto scaling group:\
 `aws autoscaling create-auto-scaling-group --auto-scaling-group-name asg-cli --launch-template LaunchTemplateId=lt-08ea52d5fbe133e43 --target-group-arns arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d --health-check-type ELB --health-check-grace-period 600 --min-size 1 --max-size 3 --desired-capacity 2 --vpc-zone-identifier "subnet-95b42cb4,subnet-2fc05e70"`
 
 Create an autoscaling policy:\
-`aws autoscaling put-scaling-policy --policy-name cpu40-target-tracking-scaling-policy ^ \
-  --auto-scaling-group-name asg-cli --policy-type TargetTrackingScaling ^ \
-  --target-tracking-configuration file://scaling-policy.js`
+`aws autoscaling put-scaling-policy --policy-name cpu40-target-tracking-scaling-policy ^`\
+  `--auto-scaling-group-name asg-cli --policy-type TargetTrackingScaling ^`\
+  `--target-tracking-configuration file://scaling-policy.js`
