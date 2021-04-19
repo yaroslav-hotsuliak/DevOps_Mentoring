@@ -50,3 +50,8 @@ Create a listener for the load balancer:\
 
 Create an auto scaling group:\
 `aws autoscaling create-auto-scaling-group --auto-scaling-group-name asg-cli --launch-template LaunchTemplateId=lt-08ea52d5fbe133e43 --target-group-arns arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d --health-check-type ELB --health-check-grace-period 600 --min-size 1 --max-size 3 --desired-capacity 2 --vpc-zone-identifier "subnet-95b42cb4,subnet-2fc05e70"`
+
+Create an autoscaling policy:\
+`aws autoscaling put-scaling-policy --policy-name cpu40-target-tracking-scaling-policy ^
+  --auto-scaling-group-name asg-cli --policy-type TargetTrackingScaling ^
+  --target-tracking-configuration file://scaling-policy.js`
