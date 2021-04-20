@@ -72,3 +72,6 @@ Create an RDS:\
 	`--engine-version 10.4.13 ^`\
 	`--max-allocated-storage 1000 ^`\
 	`--no-publicly-accessible`
+	
+Created Read Replica for DB:\
+`aws rds create-db-instance-read-replica --db-instance-identifier cli-test-db-repl --source-db-instance-identifier cli-test-db`
