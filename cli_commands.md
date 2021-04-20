@@ -77,3 +77,7 @@ Created Read Replica for DB:\
 `aws rds create-db-instance-read-replica --db-instance-identifier cli-test-db-repl --source-db-instance-identifier cli-test-db`
 
 **Route 53**
+
+Create a hosted zone:\
+`aws route53 create-hosted-zone --name cliyaroslavdevops.site --caller-reference 2021-04-20-18:47 ^`\
+    `--hosted-zone-config "{\"Comment\":\"cli-test\",\"PrivateZone\":false}"`
