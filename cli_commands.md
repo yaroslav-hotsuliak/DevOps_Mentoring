@@ -75,3 +75,5 @@ Create an RDS:\
 	
 Created Read Replica for DB:\
 `aws rds create-db-instance-read-replica --db-instance-identifier cli-test-db-repl --source-db-instance-identifier cli-test-db`
+
+**Route 53**
