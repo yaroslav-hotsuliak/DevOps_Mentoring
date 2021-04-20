@@ -56,6 +56,8 @@ Create an autoscaling policy:\
   `--auto-scaling-group-name asg-cli --policy-type TargetTrackingScaling ^`\
   `--target-tracking-configuration file://scaling-policy.js`
   
+**RDS**
+
 Create an RDS:\
 `aws rds create-db-instance ^`\
   `--db-name clitestdb ^`\
