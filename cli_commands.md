@@ -55,3 +55,18 @@ Create an autoscaling policy:\
 `aws autoscaling put-scaling-policy --policy-name cpu40-target-tracking-scaling-policy ^`\
   `--auto-scaling-group-name asg-cli --policy-type TargetTrackingScaling ^`\
   `--target-tracking-configuration file://scaling-policy.js`
+  
+Create an RDS:\
+`aws rds create-db-instance ^`\
+  `--db-name clitestdb ^`\
+  `--db-instance-identifier cli-test-db ^`\
+  `--db-instance-class db.t2.micro ^`\
+  `--engine mariadb ^`\
+  `--master-username admin ^`\
+  `--master-user-password adminadmin ^`\
+  `--allocated-storage 20 ^`\
+	`--availability-zone us-east-1f ^`\
+	`--db-subnet-group-name default-vpc-3d43ed40 ^`\
+	`--engine-version 10.4.13 ^`\
+	`--max-allocated-storage 1000 ^`\
+	`--no-publicly-accessible`
