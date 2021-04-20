@@ -80,4 +80,6 @@ Created Read Replica for DB:\
 
 Create a hosted zone:\
 `aws route53 create-hosted-zone --name cliyaroslavdevops.site --caller-reference 2021-04-20-18:47 ^`\
-    `--hosted-zone-config "{\"Comment\":\"cli-test\",\"PrivateZone\":false}"`
+    `--hosted-zone-config "{\"Comment\":\"cli-test\",\"PrivateZone\":false}"`\
+"Id": "/hostedzone/Z099407318F9R2MKJ0YR7"
+
