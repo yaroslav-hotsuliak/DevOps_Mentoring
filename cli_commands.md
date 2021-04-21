@@ -126,5 +126,6 @@ Delete Cloudfront distribution:\
 E135H43STUF232\
 `aws cloudfront get-distribution-config --id E284FE1AVCY1DG > dist-config-disable.json`\
 `aws cloudfront update-distribution --id E284FE1AVCY1DG --if-match E135H43STUF232 --distribution-config file://dist-config-disable.json`\
+`aws cloudfront get-distribution --id E284FE1AVCY1DG`\
 E2OFT666PIF8AZ\
 `aws cloudfront delete-distribution --id E284FE1AVCY1DG --if-match E2OFT666PIF8AZ`
