@@ -1,0 +1,25 @@
+{
+  "Comment": "optional comment about the changes in this change batch request",
+  "Changes": [
+    {
+      "Action": "DELETE",
+      "ResourceRecordSet": {
+        "Name": "cliyaroslavdevops.site",
+        "Type": "A",
+        "AliasTarget": {
+          "HostedZoneId": "Z35SXDOTRQ7X7K",
+          "DNSName": "dualstack.load-balancer-cli-test-897995853.us-east-1.elb.amazonaws.com",
+          "EvaluateTargetHealth": false
+        }}
+    },
+    {
+      "Action": "DELETE",
+      "ResourceRecordSet": {
+        "Name": "www.cliyaroslavdevops.site",
+        "Type": "CNAME",
+        "TTL": 300,
+		"ResourceRecords": [{"Value": "cliyaroslavdevops.site"}]
+        }
+    }
+  ]
+}
