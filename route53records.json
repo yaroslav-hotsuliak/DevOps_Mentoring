@@ -1,0 +1,12 @@
+{
+                "Comment": "Create records for cli route53 test",
+                 "Changes": [ {
+                             "Action": "CREATE",
+                            "ResourceRecordSet": {
+                                "Name": "www.cliyaroslavdevops.site",
+                                    "Type": "CNAME",
+                                     "TTL": 300,
+                                  "ResourceRecords": [{"Value": "cliyaroslavdevops.site"}]
+                            }}
+]
+} 
