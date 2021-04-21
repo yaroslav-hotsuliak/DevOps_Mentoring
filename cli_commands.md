@@ -105,7 +105,7 @@ Delete the target group:\
 `aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d`
 
 Delete RDS Read replica:\
-`aws rds promote-read-replica --db-instance-identifier cli-test-db-repl`
+`aws rds promote-read-replica --db-instance-identifier cli-test-db-repl`\
 `aws rds delete-db-instance --db-instance-identifier cli-test-db-repl --skip-final-snapshot`
 
 Delete RDS:\
