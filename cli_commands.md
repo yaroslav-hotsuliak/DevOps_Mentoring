@@ -85,3 +85,46 @@ Create a hosted zone:\
 
 Add records to the hosted zone:\
 `aws route53 change-resource-record-sets --hosted-zone-id Z099407318F9R2MKJ0YR7 --change-batch file://route53records-both.json`
+
+**DELETE**
+
+Delete S3:\
+`aws s3 rm s3://mywebsitecli-test --recursive`\
+`aws s3 rb s3://mywebsitecli-test --force`
+
+Delete the Autoscaling group:\
+`aws autoscaling delete-auto-scaling-group --auto-scaling-group-name asg-cli`
+
+Delete the launch template:\
+`aws ec2 delete-launch-template --launch-template-id lt-08ea52d5fbe133e43`
+
+Delete the load balancer:\
+`aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:345145124555:loadbalancer/app/load-balancer-cli-test/dcf437696dac6526`
+
+Delete the target group:\
+`aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:345145124555:targetgroup/target-group-cli/26f7b021a662bc0d`
+
+Delete RDS Read replica:\
+`aws rds promote-read-replica --db-instance-identifier cli-test-db-repl`
+`aws rds delete-db-instance --db-instance-identifier cli-test-db-repl`
+
+Delete RDS:\
+`aws rds delete-db-instance --db-instance-identifier cli-test-db`
+
+Delete route53 records:\
+`aws route53 change-resource-record-sets --hosted-zone-id Z099407318F9R2MKJ0YR7 --change-batch file://route53records-both-delete.json`
+
+Delete route53  hosted zone:\
+`aws route53 delete-hosted-zone --id Z099407318F9R2MKJ0YR7`
+
+Delete security groups:\
+`aws ec2 delete-security-group --group-name SGforCLITest`\
+`aws ec2 delete-security-group --group-name SGforRDScli`
+
+Delete Cloudfront distribution:\
+`aws cloudfront get-distribution --id E284FE1AVCY1DG`\
+E135H43STUF232\
+`aws cloudfront get-distribution-config --id E284FE1AVCY1DG > dist-config-disable.json`\
+`aws cloudfront update-distribution --id E284FE1AVCY1DG --if-match E135H43STUF232 --distribution-config file://dist-config-disable.json`\
+E2OFT666PIF8AZ\
+`aws cloudfront delete-distribution --id E284FE1AVCY1DG --if-match E2OFT666PIF8AZ`
