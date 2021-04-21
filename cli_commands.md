@@ -83,8 +83,5 @@ Create a hosted zone:\
     `--hosted-zone-config "{\"Comment\":\"cli-test\",\"PrivateZone\":false}"`\
 "Id": "/hostedzone/Z099407318F9R2MKJ0YR7"
 
-Add a record for www routing:\
-`aws route53 change-resource-record-sets --hosted-zone-id Z099407318F9R2MKJ0YR7 --change-batch file://route53records.json`
-
-Add a record for load balancer routing:\
-`aws route53 change-resource-record-sets --hosted-zone-id Z099407318F9R2MKJ0YR7 --change-batch file://route53records2.json`
+Add records to the hosted zone:\
+`aws route53 change-resource-record-sets --hosted-zone-id Z099407318F9R2MKJ0YR7 --change-batch file://route53records-both.json`
