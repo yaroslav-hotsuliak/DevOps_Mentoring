@@ -106,10 +106,10 @@ Delete the target group:\
 
 Delete RDS Read replica:\
 `aws rds promote-read-replica --db-instance-identifier cli-test-db-repl`
-`aws rds delete-db-instance --db-instance-identifier cli-test-db-repl`
+`aws rds delete-db-instance --db-instance-identifier cli-test-db-repl --skip-final-snapshot`
 
 Delete RDS:\
-`aws rds delete-db-instance --db-instance-identifier cli-test-db`
+`aws rds delete-db-instance --db-instance-identifier cli-test-db --skip-final-snapshot`
 
 Delete route53 records:\
 `aws route53 change-resource-record-sets --hosted-zone-id Z099407318F9R2MKJ0YR7 --change-batch file://route53records-both-delete.json`
