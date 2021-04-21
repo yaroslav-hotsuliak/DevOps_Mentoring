@@ -93,7 +93,7 @@ Delete S3:\
 `aws s3 rb s3://mywebsitecli-test --force`
 
 Delete the Autoscaling group:\
-`aws autoscaling delete-auto-scaling-group --auto-scaling-group-name asg-cli`
+`aws autoscaling delete-auto-scaling-group --auto-scaling-group-name asg-cli --force-delete`
 
 Delete the launch template:\
 `aws ec2 delete-launch-template --launch-template-id lt-08ea52d5fbe133e43`
