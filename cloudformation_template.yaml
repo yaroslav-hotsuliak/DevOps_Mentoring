@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: MyPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref MyBucket
+                - /*
+      Bucket: !Ref MyBucket
+
+  myDistribution:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Origins:
+        - DomainName: !Select [1, !Split ["//", !GetAtt [MyBucket, WebsiteURL]]]
+          Id: !Join ["-",[distribution, !Ref MyBucket]]
+          CustomOriginConfig:
+            HTTPPort: '80'
+            HTTPSPort: '443'
+            OriginProtocolPolicy: match-viewer
+        Enabled: 'true'
+        DefaultCacheBehavior:
+          TargetOriginId: !Join ["-",[distribution, !Ref MyBucket]]
+          SmoothStreaming: 'false'
+          ForwardedValues:
+            QueryString: 'false'
+            Cookies:
+              Forward: all
+          ViewerProtocolPolicy: allow-all
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: 'true'  
+Outputs:
+  WebsiteURL:
+    Value: !GetAtt MyBucket.WebsiteURL
+    Description: URL for website hosted on S3
+  DistributionDomain:
+    Value: !GetAtt myDistribution.DomainName
+    Description: Domain name of the Cloudfront Distribution 
+  
