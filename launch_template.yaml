@@ -33,41 +33,37 @@ Parameters:
     AllowedValues: [1, 2, 3]
   VPCZoneIdentifier:
     Description: "List the Subnet Ids of the instances"
-    Type: List<AWS::EC2::Subnet::Id>
+    Type: AWS::EC2::VPC::Id
   Subnets:
     Description: "Subtens list"
     Type: List<AWS::EC2::Subnet::Id>
 Mappings:
   AWSInstanceType2Arch:
-    t1.micro:
-      Arch: PV64
+    t2.nano:
+      Arch: HVM64
     t2.micro:
       Arch: HVM64
   AWSInstanceType2NATArch:
-    t1.micro:
-      Arch: NATPV64
+    t2.nano:
+      Arch: NATHVM64
     t2.micro:
       Arch: NATHVM64
   AWSRegionArch2AMI:
     us-east-1:
-      PV64: ami-2a69aa47
       HVM64: ami-6869aa05
     us-west-2:
-      PV64: ami-7f77b31f
       HVM64: ami-7172b611    
 Resources:
   LabSecurityGroup:
-  Type: AWS::EC2::SecurityGroup
-  Properties:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
       GroupDescription: Allow http and ssh
-      VpcId:
-         Ref: VPCZoneIdentifier
+      VpcId: !Ref VPCZoneIdentifier
       SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: 22
         ToPort: 22
         CidrIp: !Ref SSHLocation
-      SecurityGroupEgress:
       - IpProtocol: tcp
         FromPort: 80
         ToPort: 80
@@ -77,12 +73,6 @@ Resources:
     Properties:
       LaunchTemplateName: myLaunchTemplate
       LaunchTemplateData:
-        NetworkInterfaces:
-          - DeviceIndex: 0
-            AssociatePublicIpAddress: true
-            Groups:
-              Ref: LabSecurityGroup
-            DeleteOnTermination: true
         Placement:
           Tenancy: dedicated
         ImageId: !FindInMap [ AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [ AWSInstanceType2Arch, !Ref InstanceType, Arch ]]
@@ -91,11 +81,13 @@ Resources:
   myElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
-      AvailabilityZones: !GetAZs ''
       CrossZone: 'true'
-      SecurityGroups: !Ref LabSecurityGroup
+      SecurityGroups: [!Ref LabSecurityGroup]
       Subnets: !Ref Subnets
-      Name: myElasticLoadBalancer
+      Listeners:
+      - LoadBalancerPort: '80'
+        InstancePort: '80'
+        Protocol: HTTP
   myTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -105,7 +97,7 @@ Resources:
       HealthyThresholdCount: 5
       Name: myTargetGroup
       Port: 80
-      Protocol: http
+      Protocol: HTTP
       VpcId: !Ref VPCZoneIdentifier
   HTTPlistener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
@@ -122,14 +114,16 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       AutoScalingGroupName: myAutoscalingGroup
-      VPCZoneIdentifier: !Ref VPCZoneIdentifier 
-      LaunchTemplate: !Ref myLaunchTemplate
+      VPCZoneIdentifier: !Ref Subnets
+      LaunchTemplate:
+        LaunchTemplateId: !Ref myLaunchTemplate
+        Version: !GetAtt myLaunchTemplate.LatestVersionNumber
       MinSize: !Ref MinSizeASG
       MaxSize: !Ref MaxSizeASG
       DesiredCapacity: !Ref DesiredCapacityASG
       HealthCheckGracePeriod: 600
       MaxInstanceLifetime: 2592000
-      TargetGroupARNs: !Ref myTargetGroup  
+      TargetGroupARNs: [!Ref myTargetGroup]  
 Outputs:
   DNSName:
     Value: !GetAtt myElasticLoadBalancer.DNSName
