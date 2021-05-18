@@ -5,7 +5,7 @@ Parameters:
     Description: EC2 instance type
     Type: String
     Default: t2.micro
-    AllowedValues: [t1.micro, t2.micro]
+    AllowedValues: [t2.nano, t2.micro]
     ConstraintDescription: must be a valid EC2 instance type.
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
@@ -50,9 +50,9 @@ Mappings:
       Arch: NATHVM64
   AWSRegionArch2AMI:
     us-east-1:
-      HVM64: ami-6869aa05
+      HVM64: ami-0d5eff06f840b45e9
     us-west-2:
-      HVM64: ami-7172b611    
+      HVM64: ami-0cf6f5c8a62fa5da6   
 Resources:
   LabSecurityGroup:
     Type: AWS::EC2::SecurityGroup
