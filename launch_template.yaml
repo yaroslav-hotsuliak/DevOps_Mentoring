@@ -132,5 +132,5 @@ Resources:
       TargetGroupARNs:!Ref myTargetGroup  
 Outputs:
   DNSName:
-    Value: !GetAtt myAutoscalingGroup.DNSName
+    Value: !GetAtt myElasticLoadBalancer.DNSName
     Description: DNSName of the loadbalancer
