@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Cloudformation Lab
+Parameters:
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues: [t1.micro, t2.micro]
+    ConstraintDescription: must be a valid EC2 instance type.
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  SSHLocation:
+    Description: The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  MaxSizeASG:
+    Description: "Enter the Max Size for the ASG"
+    Type: String
+    AllowedValues: [1, 2, 3]
+  MinSizeASG:
+    Description: "Enter the Min Size for the ASG"
+    Type: String
+    AllowedValues: [1, 2, 3]
+  DesiredCapacityASG:
+    Description: "Enter the desired capacity for the ASG"
+    Type: String
+    AllowedValues: [1, 2, 3]
+  VPCZoneIdentifier:
+    Description: "List the Subnet Ids of the instances"
+    Type: List<AWS::EC2::Subnet::Id>
+  Subnets:
+    Description: "Subtens list"
+    Type: List<AWS::EC2::Subnet::Id>
+Mappings:
+  AWSInstanceType2Arch:
+    t1.micro:
+      Arch: PV64
+    t2.micro:
+      Arch: HVM64
+  AWSInstanceType2NATArch:
+    t1.micro:
+      Arch: NATPV64
+    t2.micro:
+      Arch: NATHVM64
+  AWSRegionArch2AMI:
+    us-east-1:
+      PV64: ami-2a69aa47
+      HVM64: ami-6869aa05
+    us-west-2:
+      PV64: ami-7f77b31f
+      HVM64: ami-7172b611    
+Resources:
+  LabSecurityGroup:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+      GroupDescription: Allow http and ssh
+      VpcId:
+         Ref: VPCZoneIdentifier
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: !Ref SSHLocation
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0  
+  myLaunchTemplate:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateName: myLaunchTemplate
+      LaunchTemplateData:
+        NetworkInterfaces:
+          - DeviceIndex: 0
+            AssociatePublicIpAddress: true
+            Groups:
+              Ref: LabSecurityGroup
+            DeleteOnTermination: true
+        Placement:
+          Tenancy: dedicated
+        ImageId: !FindInMap [ AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [ AWSInstanceType2Arch, !Ref InstanceType, Arch ]]
+        InstanceType: !Ref InstanceType
+        KeyName: !Ref KeyName
+  myElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      AvailabilityZones: !GetAZs ''
+      CrossZone: 'true'
+      SecurityGroups: !Ref LabSecurityGroup
+      Subnets: !Ref Subnets
+      Name: myElasticLoadBalancer
+  myTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      Name: myTargetGroup
+      Port: 80
+      Protocol: http
+      VpcId: !Ref VPCZoneIdentifier
+  HTTPlistener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions:
+        - Type: "forward"
+          ForwardConfig:
+            TargetGroups:
+              - TargetGroupArn: !Ref myTargetGroup
+      LoadBalancerArn: !Ref myElasticLoadBalancer
+      Port: 80
+      Protocol: "HTTP"  
+  myAutoscalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: myAutoscalingGroup
+      VPCZoneIdentifier: !Ref VPCZoneIdentifier 
+      LaunchTemplate: !Ref myLaunchTemplate
+      MinSize: !Ref MinSizeASG
+      MaxSize: !Ref MaxSizeASG
+      DesiredCapacity: !Ref DesiredCapacityASG
+      HealthCheckGracePeriod: 600
+      MaxInstanceLifetime: 2592000
+      TargetGroupARNs:!Ref myTargetGroup  
+Outputs:
+  DNSName:
+    Value: !GetAtt myAutoscalingGroup.DNSName
+    Description: DNSName of the loadbalancer
