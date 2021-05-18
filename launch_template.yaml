@@ -129,7 +129,7 @@ Resources:
       DesiredCapacity: !Ref DesiredCapacityASG
       HealthCheckGracePeriod: 600
       MaxInstanceLifetime: 2592000
-      TargetGroupARNs:!Ref myTargetGroup  
+      TargetGroupARNs: !Ref myTargetGroup  
 Outputs:
   DNSName:
     Value: !GetAtt myElasticLoadBalancer.DNSName
