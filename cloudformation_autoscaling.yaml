@@ -5,7 +5,7 @@ Parameters:
     Description: EC2 instance type
     Type: String
     Default: t2.micro
-    AllowedValues: [t2.nano, t2.micro]
+    AllowedValues: [t1.micro, t2.micro]
     ConstraintDescription: must be a valid EC2 instance type.
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
@@ -39,20 +39,22 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
 Mappings:
   AWSInstanceType2Arch:
-    t2.nano:
-      Arch: HVM64
+    t1.micro:
+      Arch: PV64
     t2.micro:
       Arch: HVM64
   AWSInstanceType2NATArch:
-    t2.nano:
-      Arch: NATHVM64
+    t1.micro:
+      Arch: NATPV64
     t2.micro:
       Arch: NATHVM64
   AWSRegionArch2AMI:
     us-east-1:
-      HVM64: ami-0d5eff06f840b45e9
+      PV64: ami-2a69aa47
+      HVM64: ami-6869aa05
     us-west-2:
-      HVM64: ami-0cf6f5c8a62fa5da6   
+      PV64: ami-7f77b31f
+      HVM64: ami-7172b611   
 Resources:
   LabSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -124,7 +126,7 @@ Resources:
       HealthCheckGracePeriod: 600
       MaxInstanceLifetime: 2592000
       TargetGroupARNs: [!Ref myTargetGroup]  
-Outputs:
-  DNSName:
+Outputs: 
+  DNSNameForMyLoadBalancer:
     Value: !GetAtt myElasticLoadBalancer.DNSName
     Description: DNSName of the loadbalancer
