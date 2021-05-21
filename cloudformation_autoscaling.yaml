@@ -105,7 +105,54 @@ Resources:
       HealthCheckType: ELB
       HealthCheckGracePeriod: 600
       MaxInstanceLifetime: 2592000
-      TargetGroupARNs: [!Ref myTargetGroup]  
+      TargetGroupARNs: [!Ref myTargetGroup]
+      
+  myScaleOutPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref myAutoscalingGroup
+      ScalingAdjustment: '1'
+    
+  CPUAlarmHigh:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      EvaluationPeriods: '1'
+      Statistic: Average
+      Threshold: '75'
+      AlarmDescription: Scale-out if CPU > 75% for 1 minute
+      Period: '60'
+      AlarmActions: [!Ref myScaleOutPolicy]
+      Namespace: AWS/EC2
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref myAutoscalingGroup
+      ComparisonOperator: GreaterThanThreshold
+      MetricName: CPUUtilization
+      
+  myScaleInPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref myAutoscalingGroup
+      ScalingAdjustment: '-1'
+    
+  CPUAlarmHigh:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      EvaluationPeriods: '1'
+      Statistic: Average
+      Threshold: '25'
+      AlarmDescription: Scale-in if CPU < 25% for 1 minute
+      Period: '60'
+      AlarmActions: [!Ref myScaleInPolicy]
+      Namespace: AWS/EC2
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref myAutoscalingGroup
+      ComparisonOperator: LessThanThreshold
+      MetricName: CPUUtilization
+    
 Outputs: 
   DNSNameForMyLoadBalancer:
     Value: !GetAtt myElasticLoadBalancer.DNSName
