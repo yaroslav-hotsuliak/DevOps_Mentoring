@@ -38,23 +38,9 @@ Parameters:
     Description: "Subtens list"
     Type: List<AWS::EC2::Subnet::Id>
 Mappings:
-  AWSInstanceType2Arch:
-    t1.micro:
-      Arch: PV64
-    t2.micro:
-      Arch: HVM64
-  AWSInstanceType2NATArch:
-    t1.micro:
-      Arch: NATPV64
-    t2.micro:
-      Arch: NATHVM64
   AWSRegionArch2AMI:
     us-east-1:
-      PV64: ami-2a69aa47
-      HVM64: ami-6869aa05
-    us-west-2:
-      PV64: ami-7f77b31f
-      HVM64: ami-7172b611   
+      HVM64: ami-0d5eff06f840b45e9    
 Resources:
   LabSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -77,19 +63,15 @@ Resources:
       LaunchTemplateData:
         Placement:
           Tenancy: dedicated
-        ImageId: !FindInMap [ AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [ AWSInstanceType2Arch, !Ref InstanceType, Arch ]]
+        ImageId: !FindInMap [ AWSRegionArch2AMI, !Ref 'AWS::Region', HVM64 ]
         InstanceType: !Ref InstanceType
+        SecurityGroupIds: [ !GetAtt LabSecurityGroup.GroupId ]
         KeyName: !Ref KeyName
   myElasticLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      CrossZone: 'true'
       SecurityGroups: [!Ref LabSecurityGroup]
       Subnets: !Ref Subnets
-      Listeners:
-      - LoadBalancerPort: '80'
-        InstancePort: '80'
-        Protocol: HTTP
   myTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -111,11 +93,10 @@ Resources:
               - TargetGroupArn: !Ref myTargetGroup
       LoadBalancerArn: !Ref myElasticLoadBalancer
       Port: 80
-      Protocol: "HTTP"  
+      Protocol: HTTP
   myAutoscalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      AutoScalingGroupName: myAutoscalingGroup
       VPCZoneIdentifier: !Ref Subnets
       LaunchTemplate:
         LaunchTemplateId: !Ref myLaunchTemplate
@@ -123,6 +104,7 @@ Resources:
       MinSize: !Ref MinSizeASG
       MaxSize: !Ref MaxSizeASG
       DesiredCapacity: !Ref DesiredCapacityASG
+      HealthCheckType: ELB
       HealthCheckGracePeriod: 600
       MaxInstanceLifetime: 2592000
       TargetGroupARNs: [!Ref myTargetGroup]  
