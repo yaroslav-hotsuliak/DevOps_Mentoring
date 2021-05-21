@@ -61,8 +61,6 @@ Resources:
     Properties:
       LaunchTemplateName: myLaunchTemplate
       LaunchTemplateData:
-        Placement:
-          Tenancy: dedicated
         ImageId: !FindInMap [ AWSRegionArch2AMI, !Ref 'AWS::Region', HVM64 ]
         InstanceType: !Ref InstanceType
         SecurityGroupIds: [ !GetAtt LabSecurityGroup.GroupId ]
