@@ -152,34 +152,7 @@ Resources:
         Value: !Ref myAutoscalingGroup
       ComparisonOperator: LessThanThreshold
       MetricName: CPUUtilization
-#Route 53      
-  DNS: 
-    Type: "AWS::Route53::HostedZone"
-    Properties: 
-      HostedZoneConfig: 
-        Comment: 'My hosted zone for example.com'
-      Name: 'example.com'
-	
-  myDNSRecord1:
-    Type: AWS::Route53::RecordSet
-    Properties:
-	    HostedZoneId : Z8VLZEXAMPLE
-	    Name: test.example.com
-	    ResourceRecords:
-	    - 192.0.2.99
-	    TTL: 900
-	    Type: A
-	
-  myDNSRecord2:
-    Type: AWS::Route53::RecordSet
-    Properties:
-	    HostedZoneId : Z8VLZEXAMPLE
-	    Name: test.example.com
-	    ResourceRecords:
-	    - 192.0.2.99
-	    TTL: 900
-	    Type: A
-    
+      
 Outputs: 
   DNSNameForMyLoadBalancer:
     Value: !GetAtt myElasticLoadBalancer.DNSName
