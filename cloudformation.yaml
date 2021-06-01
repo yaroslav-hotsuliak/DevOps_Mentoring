@@ -86,6 +86,14 @@ Resources:
         InstanceType: !Ref InstanceType
         SecurityGroupIds: [ !GetAtt LabSecurityGroup.GroupId ]
         KeyName: !Ref KeyName
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+          
+            yum update -y
+            yum install -y httpd
+            service httpd start
+            systemctl enable httpd
   myElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
