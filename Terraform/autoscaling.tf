@@ -122,7 +122,7 @@ resource "aws_route53_record" "record2" {
 # scale up alarm
 resource "aws_autoscaling_policy" "scale-up-policy" {
   name = "scale-up-policy"
-  autoscaling_group_name = "my_autoscaling_group"
+  autoscaling_group_name = aws_autoscaling_group.my_autoscaling_group.name
   adjustment_type = "ChangeInCapacity"
   scaling_adjustment = "1"
   cooldown = "60"
@@ -140,7 +140,7 @@ resource "aws_cloudwatch_metric_alarm" "scale-up-alarm" {
   statistic = "Average"
   threshold = "75"
   dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.my_autoscaling_group.name
+    "AutoScalingGroupName" = "aws_autoscaling_group.my_autoscaling_group.name" 
   }
   actions_enabled = true
   alarm_actions = [aws_autoscaling_policy.scale-up-policy.arn]
@@ -149,7 +149,7 @@ resource "aws_cloudwatch_metric_alarm" "scale-up-alarm" {
 # scale down alarm
 resource "aws_autoscaling_policy" "scale-down-policy" {
   name = "scale-down-policy"
-  autoscaling_group_name = "my_autoscaling_group"
+  autoscaling_group_name = aws_autoscaling_group.my_autoscaling_group.name
   adjustment_type = "ChangeInCapacity"
   scaling_adjustment = "-1"
   cooldown = "60"
@@ -167,7 +167,7 @@ resource "aws_cloudwatch_metric_alarm" "example-cpu-alarm-scaledown" {
   statistic = "Average"
   threshold = "25"
   dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.my_autoscaling_group.name
+    "AutoScalingGroupName" = "aws_autoscaling_group.my_autoscaling_group.name"
   }
   actions_enabled = true
   alarm_actions = [aws_autoscaling_policy.scale-down-policy.arn]
